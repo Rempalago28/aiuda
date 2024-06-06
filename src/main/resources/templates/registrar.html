@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+        }
+        h2 {
+            color: #007bff;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        .invalid {
+            border-color: red;
+        }
+    </style>
+    <script>
+        function validarFormulario() {
+            var dni = document.getElementById('DNI');
+            var contrase = document.getElementById('contrase');
+            var telefono = document.getElementById('telefono');
+            var correo_electro = document.getElementById('correo_electro');
+            var nombre = document.getElementById('nombre');
+            var apellido = document.getElementById('apellido');
+            var fechaNacimiento = document.getElementById('fechaNacimiento');
+            var direccion = document.getElementById('direccion');
+
+            var regexDNI = /^[0-9]{8}$/;
+            var regexContrase = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,20}$/;
+            var regexTelefono = /^[0-9]{9}$/;
+            var regexCorreo = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            var regexNombre = /^[a-zA-Z\s]{2,50}$/;
+            var regexApellido = /^[a-zA-Z\s]{2,50}$/;
+            var regexFechaNacimiento = /^\d{4}-\d{2}-\d{2}$/;
+            var regexDireccion = /^[a-zA-Z0-9\s,]+$/;
+            var regexDireccionNumero = /^(?=.*[a-zA-Z])(?=.*[0-9])/;
+
+            dni.classList.remove('invalid');
+            contrase.classList.remove('invalid');
+            telefono.classList.remove('invalid');
+            correo_electro.classList.remove('invalid');
+            nombre.classList.remove('invalid');
+            apellido.classList.remove('invalid');
+            fechaNacimiento.classList.remove('invalid');
+            direccion.classList.remove('invalid');
+
+            if (!regexDNI.test(dni.value)) {
+                dni.classList.add('invalid');
+                alert('El DNI debe contener exactamente 8 dígitos.');
+                return false;
+            }
+
+            if (!regexContrase.test(contrase.value)) {
+                contrase.classList.add('invalid');
+                alert('La contraseña debe tener entre 6 y 20 caracteres, una mayúscula, un número y un carácter especial (@$!%*?&).');
+                return false;
+            }
+
+            if (!regexTelefono.test(telefono.value)) {
+                telefono.classList.add('invalid');
+                alert('El teléfono debe contener exactamente 9 dígitos.');
+                return false;
+            }
+
+            if (!regexCorreo.test(correo_electro.value)) {
+                correo_electro.classList.add('invalid');
+                alert('Por favor, ingrese un correo electrónico válido.');
+                return false;
+            }
+
+            if (!regexNombre.test(nombre.value)) {
+                nombre.classList.add('invalid');
+                alert('El nombre debe contener entre 2 y 50 caracteres y solo debe contener letras y espacios.');
+                return false;
+            }
+
+            if (!regexApellido.test(apellido.value)) {
+                apellido.classList.add('invalid');
+                alert('El apellido debe contener entre 2 y 50 caracteres y solo debe contener letras y espacios.');
+                return false;
+            }
+
+            var fechaActual = new Date();
+            var fechaNac = new Date(fechaNacimiento.value);
+            var edad = fechaActual.getFullYear() - fechaNac.getFullYear();
+            var m = fechaActual.getMonth() - fechaNac.getMonth();
+
+            if (m < 0 || (m === 0 && fechaActual.getDate() < fechaNac.getDate())) {
+                edad--;
+            }
+
+            if (edad < 18) {
+                fechaNacimiento.classList.add('invalid');
+                alert('Debes tener al menos 18 años para registrarte.');
+                return false;
+            }
+
+            if (!regexDireccion.test(direccion.value) || !regexDireccionNumero.test(direccion.value)) {
+                direccion.classList.add('invalid');
+                alert('La dirección debe contener letras, números, espacios y comas, y debe incluir un número de avenida, calle o urbanización.');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-primary bg-dark navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/index">Más es menos</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="/index">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/carrito">Carrito</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="text-center">Registro</h2>
+        <form action="/registrar" method="post" onsubmit="return validarFormulario()">
+            <div class="form-group">
+                <label for="DNI">DNI</label>
+                <input type="text" class="form-control" id="DNI" name="DNI" placeholder="Ingrese su DNI" required minlength="8" maxlength="8">
+            </div>
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese su nombre" required minlength="2" maxlength="50">
+            </div>
+            <div class="form-group">
+                <label for="apellido">Apellido</label>
+                <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Ingrese su apellido" required minlength="2" maxlength="50">
+            </div>
+            <div class="form-group">
+                <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" required>
+            </div>
+            <div class="form-group">
+                <label for="telefono">Teléfono</label>
+                <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Ingrese su teléfono" required pattern="[0-9]{9}" minlength="9" maxlength="9">
+            </div>
+            <div class="form-group">
+                <label for="correo_electro">Correo Electrónico</label>
+                <input type="email" class="form-control" id="correo_electro" name="correo_electro" placeholder="Ingrese su correo electrónico" required>
+            </div>
+            <div class="form-group">
+                <label for="contrase">Contraseña</label>
+                <input type="password" class="form-control" id="contrase" name="contrase" placeholder="Ingrese su contraseña" required minlength="6" maxlength="20">
+            </div>
+            <div class="form-group">
+                <label for="direccion">Dirección</label>
+                <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Ingrese su dirección" required minlength="5" maxlength="100">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Registrar</button>
+        </form>
+    </div>
+</body>
+</html>
